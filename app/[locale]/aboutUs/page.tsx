@@ -6,6 +6,9 @@ import { useParams } from "next/navigation";
 import { getMessages } from "@/messages";
 import { useInView } from "@/hooks/useInView";
 import { Button } from "@/components/ui";
+import StickySection from "@/components/ui/StickySection";
+import { GlassCard } from "@/components/ui/GlassCard";
+import ExpertsCard from "@/components/ui/ExpertsCard";
 
 const VALUES = [
   {
@@ -56,11 +59,11 @@ function StatItem({
 
   return (
     <div className="text-center">
-      <div className="font-peyda-bold text-4xl leading-none text-foreground sm:text-5xl lg:text-6xl">
+      <div className="font-peyda-bold text-4xl leading-none text-popover sm:text-5xl lg:text-6xl">
         {formatLocaleNumber(count, locale)}+
       </div>
 
-      <div className="mt-2 whitespace-nowrap font-peyda-medium text-xs text-foreground sm:text-sm lg:mt-3 lg:text-lg">
+      <div className="mt-2 whitespace-nowrap font-peyda-medium text-xs text-popover sm:text-sm lg:mt-3 lg:text-lg">
         {stat.label}
       </div>
     </div>
@@ -83,7 +86,7 @@ function AboutUs() {
           HERO
       ========================================================= */}
 
-      <section className="relative isolate">
+      <section className="relative isolate md:mb-10">
         {/* Hero background */}
         <div
           className="
@@ -152,13 +155,13 @@ function AboutUs() {
       {/* =========================================================
           MISSION & VISION
       ========================================================= */}
-
-      <section className="container mx-auto px-4 pt-10 sm:px-6 md:pt-24 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          {/* Image */}
-          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
-            <div
-              className="
+      <StickySection title="OUR VISIONS" dir="rtl">
+        <section className="container mx-auto px-4 pt-10 sm:px-6 md:pb-24 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            {/* Image */}
+            <div className="relative overflow-hidden rounded-2xl md:rounded-3xl">
+              <div
+                className="
                 aspect-[4/3]
                 bg-cover
                 bg-center
@@ -166,46 +169,46 @@ function AboutUs() {
                 md:h-[60vh]
                 w-full
               "
-              style={{
-                backgroundImage: "url('/images/select.jpg')",
-              }}
-            />
+                style={{
+                  backgroundImage: "url('/images/select.jpg')",
+                }}
+              />
 
-            {/* <div className="absolute inset-0 bg-slate-950/60" /> */}
+              {/* <div className="absolute inset-0 bg-slate-950/60" /> */}
 
-            <div className="absolute inset-0 flex items-center justify-center px-6 pb-16 text-center md:items-start md:pt-16">
-              <h2 className="font-peyda-bold text-xl leading-relaxed text-white md:text-3xl">
-                ماموریت و چشم انداز ما :
-              </h2>
+              <div className="absolute inset-0 flex items-center justify-center px-6 pb-16 text-center md:items-start md:pt-16">
+                <h2 className="font-peyda-bold text-xl leading-relaxed text-white md:text-3xl">
+                  ماموریت و چشم انداز ما :
+                </h2>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 md:mx-auto mx-4 -mt-20 max-w-3xl rounded-2xl bg-white p-6 shadow-lg sm:p-8 md:-mt-64 md:rounded-3xl md:p-12">
+              <p className="text-justify font-peyda-regular text-xs leading-loose text-foreground sm:text-sm md:text-base md:leading-8 lg:text-lg">
+                {t.hero.description}
+                {t.hero.description}
+                {t.hero.description}
+                {t.hero.description}
+              </p>
             </div>
           </div>
-
-          {/* Content */}
-          <div className="relative z-10 md:mx-auto mx-4 -mt-20 max-w-3xl rounded-2xl bg-white p-6 shadow-lg sm:p-8 md:-mt-64 md:rounded-3xl md:p-12">
-            <p className="text-justify font-peyda-regular text-xs leading-loose text-foreground sm:text-sm md:text-base md:leading-8 lg:text-lg">
-              {t.hero.description}
-              {t.hero.description}
-              {t.hero.description}
-              {t.hero.description}
-            </p>
-          </div>
-        </div>
-      </section>
-
+        </section>
+      </StickySection>
       {/* =========================================================
           ORGANIZATIONAL VALUES
       ========================================================= */}
+      <StickySection title="OUR VALUES" dir="rtl">
+        <section className="container mx-auto px-4 pt-12 text-center sm:px-6 md:pb-24 lg:px-8">
+          <h2 className="font-peyda-bold text-xl text-foreground md:text-3xl">
+            ارزش های سازمانی
+          </h2>
 
-      <section className="container mx-auto px-4 pt-12 text-center sm:px-6 md:pt-24 lg:px-8">
-        <h2 className="font-peyda-bold text-xl text-foreground md:text-3xl">
-          ارزش های سازمانی
-        </h2>
-
-        <div className="mx-auto mt-8 grid max-w-5xl gap-3 sm:grid-cols-3 sm:gap-5 md:mt-12 md:gap-6">
-          {VALUES.map((value) => (
-            <article
-              key={value.title}
-              className="
+          <div className="mx-auto mt-8 grid max-w-5xl gap-3 sm:grid-cols-3 sm:gap-5 md:mt-12 md:gap-6">
+            {VALUES.map((value) => (
+              <article
+                key={value.title}
+                className="
                 rounded-2xl
                 border
                 border-primary/70
@@ -215,69 +218,167 @@ function AboutUs() {
                 duration-300
                 hover:-translate-y-1
                 hover:shadow-md
+                bg-popover
 
                 sm:p-6
                 md:rounded-3xl
                 md:p-8
                 md:text-center
               "
-            >
-              <h3 className="mb-2 font-peyda-semibold text-sm text-foreground md:mb-4 md:text-xl lg:text-2xl">
-                {value.title}
-              </h3>
+              >
+                <h3 className="mb-2 font-peyda-semibold text-sm text-foreground md:mb-4 md:text-xl lg:text-2xl">
+                  {value.title}
+                </h3>
 
-              <p className="font-peyda-regular text-xs leading-loose text-foreground md:text-sm">
-                {value.description}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
+                <p className="font-peyda-regular text-xs leading-loose text-foreground md:text-sm">
+                  {value.description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      </StickySection>
 
       {/* =========================================================
           STATS
       ========================================================= */}
-
-      <section className="container mx-auto px-4 pt-12 text-center sm:px-6 md:pt-24 lg:px-8">
-        <h2 className="font-peyda-bold text-xl text-foreground md:text-3xl">
-          آمار ها و دست آورد ها :
-        </h2>
-
-        <p className="mx-auto mt-4 max-w-3xl font-peyda-regular text-xs leading-loose text-foreground sm:text-sm md:text-base lg:text-lg">
-          {t.hero.description}
-        </p>
-
-        {/* Counter */}
-        <div
-          ref={statsRef}
+      <StickySection title="WHAT WE ACHIVED" dir="rtl">
+        <section
           className="
-            mx-auto
-            mt-10
-            flex
-            max-w-sm
-            items-start
-            justify-between
-            gap-4
-
-            md:mt-14
-            md:max-w-3xl
-            md:justify-center
-            md:gap-20
-          "
+    relative
+    overflow-hidden
+    bg-cover
+    bg-center
+    bg-no-repeat
+    px-4
+    py-12
+    sm:px-6
+    md:py-16
+    md:mb-20
+    lg:px-8
+  "
+          style={{
+            backgroundImage: "url('/images/achived.jpg')",
+          }}
         >
-          {STATS.map((stat) => (
-            <StatItem
-              key={stat.label}
-              stat={stat}
-              locale="fa"
-              enabled={statsInView}
-            />
-          ))}
-        </div>
-      </section>
+          {/* Overlay */}
+          <div aria-hidden className="absolute inset-0 bg-black/25" />
 
-      <section className="bg-gradient-to-b from-background to-primary/10 px-4 pb-12 pt-12 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-primary/70 bg-background p-6 text-center shadow-sm sm:p-8 md:rounded-3xl md:p-12">
+          <div className="container relative mx-auto">
+            <GlassCard
+              variant="dark"
+              radius="xl"
+              blur="lg"
+              withReflection
+              className="
+        mx-auto
+        max-w-5xl
+        px-6
+        py-8
+        sm:px-10
+        sm:py-10
+        md:px-14
+        md:py-12
+      "
+            >
+              {/* Title */}
+              <h2
+                className="
+          text-center
+          font-peyda-bold
+          text-xl
+          text-popover
+          sm:text-2xl
+          md:text-3xl
+        "
+              >
+                آمار ها و دست آورد ها :
+              </h2>
+
+              {/* Description */}
+              <p
+                className="
+                
+          mx-auto
+          mt-4
+          max-w-3xl
+          text-center
+          font-peyda-regular
+          text-xs
+          leading-loose
+          text-popover
+          sm:text-sm
+          md:text-base
+        "
+              >
+                {t.hero.description}
+              </p>
+
+              {/* Counter */}
+              <div
+                ref={statsRef}
+                className="
+                text-popover
+          mx-auto
+          mt-8
+          grid
+          max-w-3xl
+          grid-cols-3
+          items-start
+          gap-3
+          sm:mt-10
+          sm:gap-8
+          md:mt-12
+          md:gap-16
+        "
+              >
+                {STATS.map((stat) => (
+                  <StatItem
+                    key={stat.label}
+                    stat={stat}
+                    locale="fa"
+                    enabled={statsInView}
+                  />
+                ))}
+              </div>
+            </GlassCard>
+          </div>
+        </section>
+      </StickySection>
+      <StickySection title="OUR EXPERTS" dir="rtl">
+        <div
+          className="
+    mx-auto
+    grid
+    max-w-6xl
+    grid-cols-1
+    gap-4
+    sm:grid-cols-2
+    md:gap-5
+    lg:grid-cols-3
+  "
+        >
+          <ExpertsCard
+            image="/images/expert.jpg"
+            title="منتظر همکاری با شما هستیم"
+            description={t.hero.description}
+          />
+
+          <ExpertsCard
+            image="/images/expert.jpg"
+            title="منتظر همکاری با شما هستیم"
+            description={t.hero.description}
+          />
+
+          <ExpertsCard
+            image="/images/expert.jpg"
+            title="منتظر همکاری با شما هستیم"
+            description={t.hero.description}
+          />
+        </div>
+      </StickySection>
+      <section className=" px-4 pb-12 pt-12 sm:px-6 md:py-24">
+        <div className="bg-popover mx-auto max-w-3xl rounded-2xl   p-6 text-center shadow-sm sm:p-8 md:rounded-3xl md:p-12">
           <h2 className="font-peyda-bold text-xl text-foreground md:text-3xl">
             منتظر همکاری با شما هستیم
           </h2>

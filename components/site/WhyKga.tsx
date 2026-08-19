@@ -38,7 +38,7 @@ function WhyKga({ locale }: { locale: string }) {
         {VALUES.map((value) => (
           <div
             key={value.id}
-            className="rounded-2xl border border-primary px-8 py-5 md:py-10 md:text-center"
+            className="bg-popover rounded-2xl border border-primary px-8 py-5 md:py-10 md:text-center"
           >
             <h3 className="mb-4 font-peyda-medium text-2xl text-foreground">
               {value.title}
