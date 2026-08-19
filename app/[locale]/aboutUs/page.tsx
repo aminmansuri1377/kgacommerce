@@ -81,7 +81,7 @@ function AboutUs() {
   });
 
   return (
-    <main dir="rtl" className="overflow-hidden bg-background text-foreground">
+    <main dir="rtl" className=" bg-background text-foreground">
       {/* =========================================================
           HERO
       ========================================================= */}
@@ -155,7 +155,7 @@ function AboutUs() {
       {/* =========================================================
           MISSION & VISION
       ========================================================= */}
-      <StickySection title="OUR VISIONS" dir="rtl">
+      <StickySection title="OUR VISIONS">
         <section className="container mx-auto px-4 pt-10 sm:px-6 md:pb-24 lg:px-8">
           <div className="mx-auto max-w-6xl">
             {/* Image */}
@@ -198,7 +198,7 @@ function AboutUs() {
       {/* =========================================================
           ORGANIZATIONAL VALUES
       ========================================================= */}
-      <StickySection title="OUR VALUES" dir="rtl">
+      <StickySection title="OUR VALUES">
         <section className="container mx-auto px-4 pt-12 text-center sm:px-6 md:pb-24 lg:px-8">
           <h2 className="font-peyda-bold text-xl text-foreground md:text-3xl">
             ارزش های سازمانی
@@ -242,7 +242,7 @@ function AboutUs() {
       {/* =========================================================
           STATS
       ========================================================= */}
-      <StickySection title="WHAT WE ACHIVED" dir="rtl">
+      <StickySection title="WHAT WE ACHIVED">
         <section
           className="
     relative
@@ -254,7 +254,7 @@ function AboutUs() {
     py-12
     sm:px-6
     md:py-16
-    md:mb-20
+    md:m-20
     lg:px-8
   "
           style={{
@@ -345,7 +345,7 @@ function AboutUs() {
           </div>
         </section>
       </StickySection>
-      <StickySection title="OUR EXPERTS" dir="rtl">
+      <StickySection title="OUR EXPERTS">
         <div
           className="
     mx-auto

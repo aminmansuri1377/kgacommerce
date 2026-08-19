@@ -112,7 +112,7 @@ export default function HomePage() {
       </StickySection>
 
       {/* ===== بخش ۲ : HOW IT WORKS ===== */}
-      <StickySection title="HOW IT WORKS" dir="rtl">
+      <StickySection title="HOW IT WORKS">
         <HowItWorks />
       </StickySection>
 
@@ -122,7 +122,7 @@ export default function HomePage() {
       </StickySection>
 
       {/* ===== بخش ۴ : ARTICLES ===== */}
-      <StickySection title="ARTICLES" dir="rtl">
+      <StickySection title="ARTICLES">
         <LatestArticles locale={locale} />
       </StickySection>
 
