@@ -41,7 +41,7 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden border",
+        "relative overflow-hidden border before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-1000 before:ease-in-out",
         radiusMap[radius],
         blurMap[blur],
         // حالت روشن: دقیقاً مطابق مقدار فیگما rgba(217,217,217,0.2)

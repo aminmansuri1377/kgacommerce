@@ -1,0 +1,317 @@
+diff --git a/hooks/useScrollReveal.ts b/hooks/useScrollReveal.ts
+new file mode 100644
+index 0000000..8a7b9c1
+--- /dev/null
++++ b/hooks/useScrollReveal.ts
+@@ -0,0 +1,35 @@
++"use client";
++
++import { useEffect, useRef, useState } from "react";
++
++interface UseScrollRevealOptions {
++  threshold?: number;
++  triggerOnce?: boolean;
++}
++
++export function useScrollReveal(options: UseScrollRevealOptions = {}) {
++  const { threshold = 0.15, triggerOnce = true } = options;
++  const ref = useRef<HTMLDivElement>(null);
++  const [isRevealed, setIsRevealed] = useState(false);
++
++  useEffect(() => {
++    const observer = new IntersectionObserver(
++      ([entry]) => {
++        if (entry.isIntersecting) {
++          setIsRevealed(true);
++          if (triggerOnce && ref.current) {
++            observer.unobserve(ref.current);
++          }
++        } else if (!triggerOnce) {
++          setIsRevealed(false);
++        }
++      },
++      { threshold }
++    );
++
++    if (ref.current) observer.observe(ref.current);
++
++    return () => {
++      if (ref.current) observer.unobserve(ref.current);
++    };
++  }, [threshold, triggerOnce]);
++
++  return { ref, isRevealed };
++}
+diff --git a/components/ui/ScrollReveal.tsx b/components/ui/ScrollReveal.tsx
+new file mode 100644
+index 0000000..2f3e4d5
+--- /dev/null
++++ b/components/ui/ScrollReveal.tsx
+@@ -0,0 +1,42 @@
++"use client";
++
++import { cn } from "@/lib/cn";
++import { useScrollReveal } from "@/hooks/useScrollReveal";
++import { type ReactNode } from "react";
++
++interface ScrollRevealProps {
++  children: ReactNode;
++  className?: string;
++  delay?: 0 | 100 | 200 | 300 | 400 | 500;
++  direction?: "up" | "in" | "scale";
++}
++
++export function ScrollReveal({ 
++  children, 
++  className, 
++  delay = 0, 
++  direction = "up" 
++}: ScrollRevealProps) {
++  const { ref, isRevealed } = useScrollReveal({ threshold: 0.15, triggerOnce: true });
++
++  const animationClass = {
++    up: "animate-reveal-up",
++    in: "animate-reveal-in",
++    scale: "animate-reveal-scale",
++  }[direction];
++
++  return (
++    <div
++      ref={ref}
++      className={cn(
++        "opacity-0",
++        isRevealed && animationClass,
++        className
++      )}
++      style={{ 
++        animationDelay: delay > 0 ? `${delay}ms` : undefined,
++        animationFillMode: "forwards" 
++      }}
++    >
++      {children}
++    </div>
++  );
++}
+diff --git a/tailwind.config.ts b/tailwind.config.ts
+index 1a2b3c4..5d6e7f8 100644
+--- a/tailwind.config.ts
++++ b/tailwind.config.ts
+@@ -38,6 +38,9 @@ module.exports = {
+         "reveal-in": "revealIn 0.6s ease-out forwards",
+         "reveal-scale":
+           "revealScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
++        "float": "float 6s ease-in-out infinite",
++        "gradient-shift": "gradientShift 8s ease infinite",
++        "pulse-soft": "pulseSoft 3s ease-in-out infinite",
+       },
+       keyframes: {
+         revealUp: {
+@@ -51,6 +54,21 @@ module.exports = {
+           "0%": { opacity: "0", transform: "scale(0.92)" },
+           "100%": { opacity: "1", transform: "scale(1)" },
+         },
++        float: {
++          "0%, 100%": { transform: "translateY(0px)" },
++          "50%": { transform: "translateY(-15px)" },
++        },
++        gradientShift: {
++          "0%, 100%": { backgroundPosition: "0% 50%" },
++          "50%": { backgroundPosition: "100% 50%" },
++        },
++        pulseSoft: {
++          "0%, 100%": { opacity: "1", transform: "scale(1)" },
++          "50%": { opacity: "0.9", transform: "scale(1.02)" },
++        },
+       },
+     },
+   },
+diff --git a/app/page.tsx b/app/page.tsx
+index 9a8b7c6..1d2e3f4 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -17,6 +17,7 @@ import { getMessages } from "@/messages";
+ import Collaboration from "@/components/site/Collaboration";
+ import HowItWorks from "@/components/site/HowItWorks";
+ import WhyKga from "@/components/site/WhyKga";
+ import LatestArticles from "@/components/site/LatestArticles";
+ import StickySection from "../../components/ui/StickySection";
++import { ScrollReveal } from "@/components/ui/ScrollReveal";
+ 
+ const Services = [
+   {
+@@ -68,10 +69,14 @@ export default function HomePage() {
+     <div>
+       <Hero locale={locale} />
+ 
+-      <OurStory locale={locale} />
+-      <Collaboration locale={locale} />
++      <ScrollReveal direction="up">
++        <OurStory locale={locale} />
++      </ScrollReveal>
++      <ScrollReveal direction="up" delay={100}>
++        <Collaboration locale={locale} />
++      </ScrollReveal>
+ 
+       {/* ===== بخش ۱ : WHAT WE DO ===== */}
+       <StickySection title="WHAT WE DO">
+diff --git a/components/site/OurStory.tsx b/components/site/OurStory.tsx
+index 3c4d5e6..7f8a9b0 100644
+--- a/components/site/OurStory.tsx
++++ b/components/site/OurStory.tsx
+@@ -4,6 +4,7 @@ import React from "react";
+ import Image from "next/image";
+ import OurStoryImage from "../../public/images/ourStory.png";
+ import { Button } from "../ui";
++import { ScrollReveal } from "../ui/ScrollReveal";
+ import { useRouter } from "next/navigation";
+ function OurStory({ locale }: { locale: string }) {
+   const t = getMessages(locale);
+@@ -12,20 +13,22 @@ function OurStory({ locale }: { locale: string }) {
+   return (
+     <div className="my-20">
+       <div className="lg:flex items-center justify-between lg:mx-40 md:mx-10 mx-5 lg:gap-40 md:gap-10">
+-        <div className="lg:w-[50%]">
++        <ScrollReveal direction="up">
++          <div className="lg:w-[50%]">
+           <h1 className="text-outline md:text-6xl text-left text-4xl">
+             ABOUT US
+           </h1>
+           <h1 className=" text-3xl font-peyda-bold my-5">{t.hero.ourStory}</h1>
+           <p className=" font-peyda-regular text-justify">
+             {t.hero.ourStoryDescription}
+           </p>
+           <Button
+             onClick={() => router.push(`/${locale}/contact`)}
+             className="px-14 mt-10"
+           >
+             {t.contactus}
+           </Button>
+-        </div>
+-        <Image
++          </div>
++        </ScrollReveal>
++        <ScrollReveal direction="scale" delay={200}>
++          <Image
+           src={OurStoryImage}
+           alt="Our Story"
+           width={400}
+           height={200}
+-          className="mt-5"
++          className="mt-5 animate-float"
+         />
++        </ScrollReveal>
+       </div>
+     </div>
+   );
+diff --git a/components/site/Collaboration.tsx b/components/site/Collaboration.tsx
+index 5e6f7g8..9h0i1j2 100644
+--- a/components/site/Collaboration.tsx
++++ b/components/site/Collaboration.tsx
+@@ -14,7 +14,7 @@ function Collaboration({ locale }: { locale: string }) {
+   const router = useRouter();
+ 
+   return (
+-    <div className="my-10 lg:mx-40 mx-10 bg-white shadow-2xl rounded-3xl">
++    <div className="my-10 lg:mx-40 mx-10 bg-white shadow-xl rounded-3xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:to-primary/5">
+       <div className=" lg:flex justify-between px-8 ">
+         <div className=" lg:w-[50%] py-10">
+           <p className="lg:text-3xl font-peyda-bold mt-5 md:mb-16 mb-5 text-justify md:leading-12">
+diff --git a/components/site/HowItWorks.tsx b/components/site/HowItWorks.tsx
+index 7h8i9j0..1k2l3m4 100644
+--- a/components/site/HowItWorks.tsx
++++ b/components/site/HowItWorks.tsx
+@@ -1,5 +1,6 @@
+ import React from "react";
+ import { GlassCard } from "../ui/GlassCard";
++import { ScrollReveal } from "../ui/ScrollReveal";
+ import { cn } from "@/lib/cn";
+ 
+ interface Step {
+@@ -45,7 +46,9 @@ function HowItWorks() {
+ 
+           <div className="relative flex flex-col gap-6 p-6 md:p-12">
+             {STEPS.map((step, index) => (
+-              <div
++              <ScrollReveal key={step.number} direction="up" delay={(index * 150) as 0 | 100 | 200 | 300 | 400 | 500}>
++              <div
+                 key={step.number}
+                 className="flex items-center justify-between gap-6"
+               >
+@@ -73,7 +76,8 @@ function HowItWorks() {
+                     </div>
+                   </div>
+                 </GlassCard>
+-              </div>
++              </div>
++              </ScrollReveal>
+             ))}
+           </div>
+         </div>
+diff --git a/components/site/WhyKga.tsx b/components/site/WhyKga.tsx
+index 3n4o5p6..7q8r9s0 100644
+--- a/components/site/WhyKga.tsx
++++ b/components/site/WhyKga.tsx
+@@ -1,5 +1,6 @@
+ import { getMessages } from "@/messages";
+ import React from "react";
++import { ScrollReveal } from "@/components/ui/ScrollReveal";
+ 
+ const VALUES = [
+   {
+@@ -28,16 +29,18 @@ function WhyKga({ locale }: { locale: string }) {
+       </p>
+ 
+       <div className="mx-5 mt-12 grid max-w-[1000px] gap-6 md:mx-auto md:grid-cols-3">
+-        {VALUES.map((value) => (
+-          <div
++        {VALUES.map((value, index) => (
++          <ScrollReveal key={value.id} delay={(index * 150) as 0 | 100 | 200 | 300 | 400 | 500} direction="up">
++            <div
++              className="bg-popover rounded-2xl border border-primary px-8 py-5 md:py-10 md:text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-primary/50"
++            >
+               key={value.id}
+-              className="bg-popover rounded-2xl border border-primary px-8 py-5 md:py-10 md:text-center"
+-            >
+               <h3 className="mb-4 font-peyda-medium text-2xl text-foreground">
+                 {value.title}
+               </h3>
+               <p className="font-peyda-thin text-sm text-foreground md:leading-[2]">
+                 {value.description}
+               </p>
+-            </div>
++            </div>
++          </ScrollReveal>
+         ))}
+       </div>
+     </div>
+diff --git a/components/site/LatestArticles.tsx b/components/site/LatestArticles.tsx
+index 5t6u7v8..9w0x1y2 100644
+--- a/components/site/LatestArticles.tsx
++++ b/components/site/LatestArticles.tsx
+@@ -1,5 +1,6 @@
+ import React from "react";
+ import Image from "next/image";
++import { ScrollReveal } from "@/components/ui/ScrollReveal";
+ import Pic1 from "../../public/images/a3.jpg";
+ import Pic2 from "../../public/images/a2.jpg";
+ import Pic3 from "../../public/images/a1.jpg";
+@@ -35,7 +36,9 @@ function LatestArticles({ articles = [], locale }: LatestArticlesProps) {
+         </h2>
+ 
+         <div className="grid grid-cols-1 overflow-hidden rounded-[24px] md:grid-cols-3">
+-          {items?.map((item) => (
++          {items?.map((item, index) => (
++            <ScrollReveal key={item.id} delay={(index * 150) as 0 | 100 | 200 | 300 | 400 | 500} direction="scale">
+             <a
+-              key={item.id}
+               href={item.href ?? "#"}
+               className="group relative block h-[320px] overflow-hidden"
+             >
+@@ -49,7 +52,8 @@ function LatestArticles({ articles = [], locale }: LatestArticlesProps) {
+                 {item.title}
+               </span>
+             </a>
++            </ScrollReveal>
+           ))}
+         </div>
+       </div>

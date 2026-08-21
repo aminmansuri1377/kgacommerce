@@ -44,6 +44,26 @@ module.exports = {
         PeydaBold: ["PEYDA-BOLD", "cursive"],
         PeydaBlack: ["PEYDA-BLACK", "cursive"],
       },
+      animation: {
+        "reveal-up": "revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "reveal-in": "revealIn 0.6s ease-out forwards",
+        "reveal-scale":
+          "revealScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+      },
+      keyframes: {
+        revealUp: {
+          "0%": { opacity: "0", transform: "translateY(40px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        revealIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        revealScale: {
+          "0%": { opacity: "0", transform: "scale(0.92)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+      },
     },
   },
   plugins: [],

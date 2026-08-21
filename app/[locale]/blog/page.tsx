@@ -14,6 +14,7 @@ import BlogImage from "../../../public/images/bloghero.jpg";
 
 import { BlogCard } from "@/components/site/BlogCard";
 import { Button } from "@/components/ui";
+import { GlassCard } from "@/components/ui/GlassCard";
 
 const Samples = [
   {
@@ -125,7 +126,7 @@ export default function BlogPage() {
             {t.hero.description}
           </p>
 
-          <div className="order-2 mx-5 mt-20 rounded-[40px] bg-white/20 p-5 text-start backdrop-blur-sm md:order-1 lg:mx-20 lg:p-16">
+          <GlassCard variant="light" radius="xl" className="p-10 m-20">
             <h2 className="font-peyda-bold text-white lg:text-2xl">
               {t.learnWithTitle}
             </h2>
@@ -133,7 +134,7 @@ export default function BlogPage() {
             <p className="my-10 font-peyda-regular text-white">
               {t.hero.description}
             </p>
-          </div>
+          </GlassCard>
         </div>
       </section>
 

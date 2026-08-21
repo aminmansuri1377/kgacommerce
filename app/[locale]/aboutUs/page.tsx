@@ -127,17 +127,7 @@ function AboutUs() {
         ======================================================= */}
 
         <div className="container mx-auto px-4 pb-10 sm:px-6 md:pb-24 lg:px-8">
-          <div
-            className="
-              mx-auto max-w-6xl
-              mt-20
-              md:rounded-3xl
-              md:bg-white/15
-              md:p-10
-              md:backdrop-blur-md
-              lg:p-14
-          "
-          >
+          <GlassCard variant="light" radius="xl" className="p-10 md:mx-20">
             <h2 className="mb-5 text-center font-peyda-bold text-xl text-foreground md:mb-6 md:text-3xl md:text-white">
               داستان شرکت :
             </h2>
@@ -148,7 +138,7 @@ function AboutUs() {
               {t.hero.description}
               {t.hero.description}
             </p>
-          </div>
+          </GlassCard>
         </div>
       </section>
 
