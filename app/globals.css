@@ -524,3 +524,281 @@
 
   /* ... بقیه کد بدون تغییر */
 }
+
+/* ============================================================================
+ *  UI MOTION — انیمیشن‌های سبک اختصاصی (بدون هیچ وابستگی خارجی)
+ * ----------------------------------------------------------------------------
+ *  همه‌ی افکت‌ها فقط روی transform / opacity اجرا می‌شوند (GPU-friendly) و در
+ *  مجموع زیر چند کیلوبایت وزن دارند. با prefers-reduced-motion که در بالای همین
+ *  فایل تعریف شده، به‌صورت خودکار غیرفعال می‌شوند.
+ * ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * ۱) سیستم Reveal اسکرولی — ورود نرم المان‌ها هنگام اسکرول
+ *     کلاس .reveal توسط کامپوننت <Reveal /> (components/ui/Reveal.tsx) کنترل
+ *     می‌شود و فقط کلاس .is-visible را موقع دیده‌شدن دریافت می‌کند.
+ * ------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-direction="left"] {
+  transform: translateX(-48px);
+}
+
+.reveal[data-direction="right"] {
+  transform: translateX(48px);
+}
+
+.reveal[data-direction="scale"] {
+  transform: scale(0.94) translateY(10px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * ۲) درخشش شیشه‌ای خودکار — GlassCard
+ *     یک لایه‌ی درخشش ثابت (همیشه روشن) + یک پرتو نور متحرک که به‌صورت
+ *     خودکار و دوره‌ای از روی کارت رد می‌شود (بدون نیاز به hover).
+ *     رنگ پرتو با متغیر --shine-color برای حالت روشن/تیره تنظیم می‌شود.
+ * ------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+ * ۲) درخشش شیشه‌ای خودکار — GlassCard (نرم، آرام و پیوسته)
+ * ------------------------------------------------------------------------- */
+.glass-shine {
+  --shine-color: rgba(255, 255, 255, 0.35);
+  --sheen-static: rgba(255, 255, 255, 0.08);
+  isolation: isolate;
+}
+
+/* پرتو متحرک — ~۴.۵ ثانیه حرکت + ~۱.۵ ثانیه مکث */
+.glass-shine::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  width: 44%;
+  z-index: 1;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    var(--shine-color) 50%,
+    transparent 70%
+  );
+  transform: translateX(-340%) skewX(-14deg);
+  animation: kga-shine 5s cubic-bezier(0.1, 0, 0.1, 0.1) infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* درخشش ثابت — با تنفس آرام (همیشه زنده) */
+.glass-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, var(--sheen-static), transparent 45%);
+  animation: kga-sheen-breathe 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes kga-shine {
+  0% {
+    transform: translateX(-340%) skewX(-14deg);
+  }
+  75%,
+  100% {
+    transform: translateX(340%) skewX(-14deg);
+  }
+}
+
+@keyframes kga-sheen-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * ۳) درخشش قوی‌تر + نور مورب ثابت — ServiceBanner (نرم، آرام و پیوسته)
+ * ------------------------------------------------------------------------- */
+.service-shine::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 60%;
+  z-index: 2;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.38) 50%,
+    transparent 70%
+  );
+  transform: translateX(-300%) skewX(-14deg);
+  animation: kga-shine-banner 5s cubic-bezier(0.1, 0, 0.1, 0.1) infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* نوار نور مورب ثابت — همیشه روشن، با تنفس آرام */
+.service-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    115deg,
+    transparent 26%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.08) 58%,
+    transparent 74%
+  );
+  animation: kga-sheen-breathe 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes kga-shine-banner {
+  0% {
+    transform: translateX(-300%) skewX(-14deg);
+  }
+  72%,
+  100% {
+    transform: translateX(300%) skewX(-14deg);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * ۴) حرکت آرام تصاویر
+ * ------------------------------------------------------------------------- */
+
+/* بزرگ‌نمایی بسیار آرام تصویر پس‌زمینه (Ken Burns) — حس زنده بودن */
+.animate-kenburns {
+  animation: kga-kenburns 10s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes kga-kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.09) translate(1.2%, -1.2%);
+  }
+}
+
+/* شناور شدن نرم و پیوسته (برای تصاویر بخش‌ها) */
+.animate-float {
+  animation: kga-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes kga-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * ۵) تیترهای SectionTitle — خطوط از مرکز به بیرون کشیده می‌شوند
+ * ------------------------------------------------------------------------- */
+.section-title-line {
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+
+.section-title-line-start {
+  transform-origin: right;
+}
+
+.section-title-line-end {
+  transform-origin: left;
+}
+
+:dir(ltr) .section-title-line-start {
+  transform-origin: left;
+}
+
+:dir(ltr) .section-title-line-end {
+  transform-origin: right;
+}
+
+.section-title-line.is-in {
+  transform: scaleX(1);
+}
+
+.section-title-heading {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s ease 0.25s,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s;
+}
+
+.section-title-heading.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------------
+ * ۶) کارت‌های WhyKga — خط طلایی که روی hover از مرکز باز می‌شود
+ * ------------------------------------------------------------------------- */
+.why-card {
+  position: relative;
+}
+
+.why-card::after {
+  content: "";
+  position: absolute;
+  inset-inline: 25%;
+  bottom: 0;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+ * ۷) نوار پیشرفت اسکرول بالای صفحه
+ * ------------------------------------------------------------------------- */
+.scroll-progress-inner {
+  transform-origin: left;
+}
+
+:dir(rtl) .scroll-progress-inner {
+  transform-origin: right;
+}
+
+/* ---------------------------------------------------------------------------
+ * ۸) پولیش سراسری سبک
+ * ------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 35%, transparent);
+}

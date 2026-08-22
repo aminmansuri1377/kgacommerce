@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/cn";
+import { Reveal } from "@/components/ui/Reveal";
 
 interface ServiceBannerProps {
   title: string;
@@ -24,17 +25,23 @@ export function ServiceBanner({
   return (
     <section
       className={cn(
-        "relative mx-5 my-8 h-[60vh] overflow-hidden rounded-2xl md:h-[55vh] md:rounded-3xl md:pb-20 lg:mx-40",
+        "service-shine relative mx-5 my-8 h-[60vh] overflow-hidden rounded-2xl md:h-[55vh] md:rounded-3xl md:pb-20 lg:mx-40",
         className,
       )}
     >
-      {/* Background */}
-      <Image src={image} alt={title} fill priority className="object-cover" />
+      {/* Background — با حرکت آرام Ken Burns حس زنده بودن می‌گیرد */}
+      <Image
+        src={image}
+        alt={title}
+        fill
+        priority
+        className="animate-kenburns object-cover"
+      />
 
       {/* Mobile: bottom gradient / Desktop: original gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/55 to-transparent md:bg-gradient-to-l md:from-slate-950/80" />
 
-      {/* Content */}
+      {/* Content — ورود پلکانی هنگام اسکرول */}
       <div
         className="
           relative z-10 flex h-full max-w-xl flex-col
@@ -42,27 +49,33 @@ export function ServiceBanner({
           md:justify-center md:px-10 md:pb-0
         "
       >
-        <h2 className="font-peyda-bold text-2xl md:text-3xl">{title}</h2>
+        <Reveal delay={0}>
+          <h2 className="font-peyda-bold text-2xl md:text-3xl">{title}</h2>
+        </Reveal>
 
-        <p className="font-peyda-regular text-white/80 md:leading-8">
-          {description}
-        </p>
+        <Reveal delay={120}>
+          <p className="font-peyda-regular text-white/80 md:leading-8">
+            {description}
+          </p>
+        </Reveal>
 
-        <div className="flex w-full items-center gap-2 text-center md:mt-10 md:gap-4">
-          <Button size="lg" className="flex-1 px-5 md:flex-none md:px-10">
-            {primaryButton}
-          </Button>
-
-          {secondaryButton && (
-            <Button
-              size="lg"
-              variant="secondary"
-              className="flex-1 px-5 md:flex-none md:px-10"
-            >
-              {secondaryButton}
+        <Reveal delay={240}>
+          <div className="flex w-full items-center gap-2 text-center md:mt-10 md:gap-4">
+            <Button size="lg" className="flex-1 px-5 md:flex-none md:px-10">
+              {primaryButton}
             </Button>
-          )}
-        </div>
+
+            {secondaryButton && (
+              <Button
+                size="lg"
+                variant="secondary"
+                className="flex-1 px-5 md:flex-none md:px-10"
+              >
+                {secondaryButton}
+              </Button>
+            )}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -24,6 +24,8 @@ import HowItWorks from "@/components/site/HowItWorks";
 import WhyKga from "@/components/site/WhyKga";
 import LatestArticles from "@/components/site/LatestArticles";
 import StickySection from "../../components/ui/StickySection";
+import { ScrollProgress } from "@/components/site/ScrollProgress";
+import { Reveal } from "@/components/ui/Reveal";
 
 const Services = [
   {
@@ -80,6 +82,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <ScrollProgress />
       <Hero locale={locale} />
 
       <OurStory locale={locale} />
@@ -127,9 +130,9 @@ export default function HomePage() {
       </StickySection>
 
       {/* ===== جستجوی محصولات (بدون تیتر چسبان) ===== */}
-      <div className="m-20">
+      <Reveal className="m-20">
         <ProductSearch value={search} onChange={setSearch} />
-      </div>
+      </Reveal>
 
       {shouldSearch ? (
         <>
